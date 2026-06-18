@@ -7,6 +7,7 @@ const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false,
+
   family: 4,
 
   auth: {
@@ -14,9 +15,9 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
+  connectionTimeout: 60000,
+  greetingTimeout: 60000,
+  socketTimeout: 60000,
 
   logger: true,
   debug: true,
@@ -28,6 +29,11 @@ export const sendEmail = async (message) => {
 
     console.log("EMAIL USER:", process.env.EMAIL_USER);
 
+    await transporter.verify();
+
+    console.log("SMTP READY");
+
+
     const info = await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: "jangidritesh570@gmail.com",
@@ -35,7 +41,9 @@ export const sendEmail = async (message) => {
       text: message,
     });
 
+
     console.log("EMAIL SENT:", info.messageId);
+
 
   } catch (error) {
 
