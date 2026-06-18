@@ -7,19 +7,24 @@ const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false,
+  family: 4,
+
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+
   connectionTimeout: 30000,
   greetingTimeout: 30000,
+  socketTimeout: 30000,
 });
 
 export const sendEmail = async (message) => {
   try {
-    console.log("EMAIL_USER:", process.env.EMAIL_USER);
+    console.log("EMAIL USER:", process.env.EMAIL_USER);
 
     await transporter.verify();
+
     console.log("SMTP READY");
 
     const info = await transporter.sendMail({
@@ -30,6 +35,7 @@ export const sendEmail = async (message) => {
     });
 
     console.log("EMAIL SENT:", info.messageId);
+
   } catch (error) {
     console.log("EMAIL ERROR:", error);
     throw error;
