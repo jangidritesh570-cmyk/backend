@@ -3,30 +3,61 @@ dotenv.config();
 
 import nodemailer from "nodemailer";
 
+
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+
+  host: "smtp.gmail.com",
+
+  port: 587,
+
+  secure: false,
+
+  requireTLS: true,
+
   auth: {
+
     user: process.env.EMAIL_USER,
+
     pass: process.env.EMAIL_PASS,
+
   },
-  pool: true,
+
 });
 
-export const sendEmail = async (message) => {
-  try {
+
+export const sendEmail = async(message)=>{
+
+  try{
+
+
+    await transporter.verify();
+
+    console.log("SMTP READY");
+
+
     await transporter.sendMail({
+
       from: process.env.EMAIL_USER,
+
       to: "jangidritesh570@gmail.com",
-      subject: "Bhoomi Response",
-      text: message,
-      html: `
-        <h2>Bhoomi Response</h2>
-        <pre>${message}</pre>
-      `,
+
+      subject:"❤️ Bhoomi Response",
+
+      text:message,
+
     });
 
+
     console.log("EMAIL SENT");
-  } catch (err) {
-    console.log("EMAIL ERROR:", err.message);
+
+
   }
+  catch(err){
+
+    console.log("EMAIL ERROR:",err.message);
+
+    throw err;
+
+  }
+
 };

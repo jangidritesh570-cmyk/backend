@@ -1,46 +1,77 @@
 import Response from "../models/Response.js";
 import { sendEmail } from "../utils/sendEmail.js";
 
-export const saveResponse = async (req, res) => {
-  try {
-    const { action, message } = req.body;
+export const saveResponse = async (req,res)=>{
+
+  try{
+
+    console.log("REQUEST RECEIVED:", req.body);
+
+
+    const {action,message}=req.body;
+
 
     await Response.create({
       action,
-      message,
+      message
     });
 
-    let emailMessage = "";
 
-    if (action === "accepted") {
-      emailMessage = `
-  Bhoomi Accepted😊
+    console.log("MONGO SAVED");
+
+
+    let emailMessage="";
+
+
+    if(action==="accepted"){
+
+      emailMessage =
+      `😊 Bhoomi Accepted ❤️
 
 Message:
-${message}
-`;
-    } else {
-      emailMessage = `
-  Bhoomi Rejected😢
+${message}`;
 
-Message:
-${message}
-`;
     }
+    else{
+
+      emailMessage =
+      "😒 Bhoomi Rejected ❌";
+
+    }
+
+
 
     await sendEmail(emailMessage);
 
+
+    console.log("EMAIL DONE");
+
+
+
     res.json({
-      success: true,
-      message: "Response saved",
+
+      success:true,
+
+      message:"Response saved"
+
     });
 
-  } catch (err) {
-    res.status(500).json({
-      error: err.message,
-    });
+
   }
-};
+
+  catch(err){
+
+    console.log("ERROR:",err);
+
+    res.status(500).json({
+
+      error:err.message
+
+    });
+
+  }
+
+}
 
 export const getResponses = async (req, res) => {
   try {
