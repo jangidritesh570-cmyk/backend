@@ -1,5 +1,8 @@
 import express from "express";
-import { saveResponse, getResponses } from "../controllers/responseController.js";
+import {
+  saveResponse,
+  getResponses,
+} from "../controllers/responseController.js";
 
 const router = express.Router();
 
