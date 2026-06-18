@@ -17,55 +17,83 @@ export const saveResponse = async (req, res) => {
       message: message || "",
     });
 
+
     let emailMessage = "";
+    let emailSubject = "";
+
 
     if (action === "accepted") {
+
+      emailSubject = "❤️ Bhoomi Accepted Your Sorry";
+
       emailMessage = `
- 😊Bhoomi Accepted Your Sorry 
+😊 Bhoomi Accepted Your Sorry
 
 💌 Bhoomi's Message:
 
-${message}
+${message || "No message"}
 
 ------------------------
 Status : ACCEPTED
       `;
+
     } else {
+
+      emailSubject = "😢 Bhoomi Rejected Your Sorry";
+
       emailMessage = `
 😢 Bhoomi Rejected Your Sorry
+
+------------------------
+Status : REJECTED
       `;
+
     }
 
-    await sendEmail(emailMessage);
+
+    await sendEmail(emailMessage, emailSubject);
+
 
     res.status(200).json({
       success: true,
       message: "Response saved and email sent",
     });
+
+
   } catch (err) {
+
     console.log(err);
 
     res.status(500).json({
       success: false,
       error: err.message,
     });
+
   }
 };
 
+
+
 export const getResponses = async (req, res) => {
   try {
+
     const responses = await Response.find().sort({
       createdAt: -1,
     });
+
 
     res.status(200).json({
       success: true,
       responses,
     });
+
+
   } catch (err) {
+
     res.status(500).json({
       success: false,
       error: err.message,
     });
+
   }
 };
