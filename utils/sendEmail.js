@@ -7,6 +7,8 @@ const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false,
+
+  // Force IPv4
   family: 4,
 
   auth: {
@@ -14,18 +16,16 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 
-  connectionTimeout: 30000,
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
+
 
 export const sendEmail = async (message) => {
   try {
+
     console.log("EMAIL USER:", process.env.EMAIL_USER);
-
-    await transporter.verify();
-
-    console.log("SMTP READY");
 
     const info = await transporter.sendMail({
       from: process.env.EMAIL_USER,
@@ -34,10 +34,14 @@ export const sendEmail = async (message) => {
       text: message,
     });
 
+
     console.log("EMAIL SENT:", info.messageId);
 
+
   } catch (error) {
+
     console.log("EMAIL ERROR:", error);
     throw error;
+
   }
 };
