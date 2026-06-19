@@ -12,20 +12,18 @@ export const saveResponse = async (req, res) => {
       });
     }
 
+    // ✅ 1. Save to DB first
     await Response.create({
       action,
       message: message || "",
     });
 
-
-    let emailMessage = "";
+    // ✅ 2. Prepare email content
     let emailSubject = "";
-
+    let emailMessage = "";
 
     if (action === "accepted") {
-
       emailSubject = "❤️ Bhoomi Accepted Your Sorry";
-
       emailMessage = `
 😊 Bhoomi Accepted Your Sorry
 
@@ -36,64 +34,54 @@ ${message || "No message"}
 ------------------------
 Status : ACCEPTED
       `;
-
     } else {
-
       emailSubject = "😢 Bhoomi Rejected Your Sorry";
-
       emailMessage = `
 😢 Bhoomi Rejected Your Sorry
 
 ------------------------
 Status : REJECTED
       `;
-
     }
 
+    // 🚀 3. SEND EMAIL IN BACKGROUND (NON-BLOCKING)
+    sendEmail(emailMessage, emailSubject)
+      .then(() => {
+        console.log("✅ Email sent successfully");
+      })
+      .catch((err) => {
+        console.log("❌ Email failed:", err.message);
+      });
 
-    await sendEmail(emailMessage, emailSubject);
-
-
-    res.status(200).json({
+    // ⚡ 4. RETURN RESPONSE IMMEDIATELY (IMPORTANT FIX)
+    return res.status(200).json({
       success: true,
-      message: "Response saved and email sent",
+      message: "Response saved successfully",
     });
 
-
   } catch (err) {
-
     console.log(err);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: err.message,
     });
-
   }
 };
 
-
-
 export const getResponses = async (req, res) => {
   try {
+    const responses = await Response.find().sort({ createdAt: -1 });
 
-    const responses = await Response.find().sort({
-      createdAt: -1,
-    });
-
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       responses,
     });
 
-
   } catch (err) {
-
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: err.message,
     });
-
   }
 };
