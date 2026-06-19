@@ -23,7 +23,7 @@ export const saveResponse = async (req, res) => {
     let emailMessage = "";
 
     if (action === "accepted") {
-      emailSubject = "❤️ Bhoomi Accepted Your Sorry";
+      emailSubject = "🎉Sorry Accepted";
       emailMessage = `
 😊 Bhoomi Accepted Your Sorry
 
@@ -35,9 +35,9 @@ ${message || "No message"}
 Status : ACCEPTED
       `;
     } else {
-      emailSubject = "😢 Bhoomi Rejected Your Sorry";
+      emailSubject = "😢Sorry Rejected";
       emailMessage = `
-😢 Bhoomi Rejected Your Sorry
+    😭Bhoomi rejected your sorry
 
 ------------------------
 Status : REJECTED
