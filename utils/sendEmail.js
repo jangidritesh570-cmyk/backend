@@ -9,10 +9,18 @@ export const sendEmail = async (message, subject) => {
   console.log("📧 EMAIL SENDING...");
 
   const data = await resend.emails.send({
-    from: "onboarding@resend.dev",
+    from: "Bhoomi App <onboarding@resend.dev>",
     to: "jangidritesh570@gmail.com",
+    reply_to: "jangidritesh570@gmail.com",
     subject,
-    text: message,
+
+    // 🔥 IMPORTANT: HTML improves inbox chance slightly
+    html: `
+      <div style="font-family: Arial; padding: 10px;">
+        <h2>${subject}</h2>
+        <pre style="font-size: 14px;">${message}</pre>
+      </div>
+    `,
   });
 
   console.log("📧 EMAIL SENT:", data);
